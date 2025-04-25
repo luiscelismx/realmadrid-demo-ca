@@ -1,0 +1,1 @@
+export { useStoresFetcher } from './use-stores-connector'; 

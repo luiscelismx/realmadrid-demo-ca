@@ -1,0 +1,88 @@
+query FetchProductById($productId: String!) {
+  product(id: $productId) {
+    id
+    key
+    version
+    taxCategory {
+      name
+    }
+    productType {
+      id
+      key
+      name
+    }
+    masterData {
+      current {
+        nameAllLocales {
+          locale
+          value
+        }
+        categories {
+          id
+          nameAllLocales {
+            locale
+            value
+          }
+        }
+        descriptionAllLocales {
+          locale
+          value
+        }
+        slugAllLocales {
+           locale
+           value
+        }
+        masterVariant {
+          id
+          sku
+          key
+          prices {
+             id
+             value {
+                currencyCode
+                centAmount
+             }
+          }
+          images {
+            url
+            label
+          }
+          attributesRaw {
+            name
+            value
+            attributeDefinition {
+              labelAllLocales {
+                locale
+                value
+              }
+            }
+          }
+        }
+        variants {
+          id
+          sku
+          key
+           prices {
+             id
+             value {
+                currencyCode
+                centAmount
+             }
+          }
+          images {
+            url
+            label
+          }
+          attributesRaw {
+            name
+            value
+          }
+        }
+      }
+      published
+      hasStagedChanges
+    }
+    createdAt
+    lastModifiedAt
+  }
+} 

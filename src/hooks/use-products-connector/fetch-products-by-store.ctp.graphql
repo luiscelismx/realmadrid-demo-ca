@@ -1,0 +1,40 @@
+# Consulta para obtener productos filtrados por product selection
+query FetchProductsByStore($productSelectionId: String!) {
+  productSelection(id: $productSelectionId) { 
+    id
+    productRefs {
+      results {
+        product {
+          id
+          key  
+          productType {
+            name
+          }
+          skus 
+          lastModifiedAt
+          createdAt
+          masterData {
+            current {              
+              masterVariant {
+                id
+                sku
+                prices {
+                  id
+                  value {
+                    currencyCode
+                    centAmount
+                  }
+                }
+              }
+              nameAllLocales {
+                locale
+                value
+              }              
+            }
+            published
+          }
+        }
+      }
+    }
+  }
+}
