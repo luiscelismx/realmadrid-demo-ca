@@ -86,7 +86,7 @@ const Welcome = () => {
           <Grid
             gridGap="16px"
             gridAutoColumns="1fr"
-            gridTemplateColumns="repeat(4, 1fr)"
+            gridTemplateColumns="repeat(5, 1fr)"
           >
             <InfoCard
               title={intl.formatMessage(messages.cardDocumentationTitle)}
@@ -109,6 +109,11 @@ const Welcome = () => {
               title={intl.formatMessage(messages.productLinkTitle)}
               content={intl.formatMessage(messages.productLinkContent)}
               linkTo={`${match.url}/products-by-store`}
+            />
+            <InfoCard
+              title={intl.formatMessage(messages.ordersLinkTitle)}
+              content={intl.formatMessage(messages.ordersLinkContent)}
+              linkTo={`${match.url}/orders`}
             />
           </Grid>
         </Spacings.Stack>

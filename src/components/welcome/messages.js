@@ -44,4 +44,12 @@ export default defineMessages({
     id: 'Welcome.productLinkContent',
     defaultMessage: 'Ver productos por tienda',
   },
+  ordersLinkTitle: {
+    id: 'Welcome.ordersLinkTitle',
+    defaultMessage: 'Pedidos',
+  },
+  ordersLinkContent: {
+    id: 'Welcome.ordersLinkContent',
+    defaultMessage: 'Ver los pedidos realizados',
+  },
 });

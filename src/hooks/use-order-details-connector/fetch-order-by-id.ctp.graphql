@@ -1,0 +1,113 @@
+query FetchOrderById($orderId: String!) {
+  order(id: $orderId) {
+    id
+    version
+    orderNumber
+    customerId
+    customerEmail
+    createdAt
+    lastModifiedAt
+    orderState
+    shipmentState
+    paymentState
+    totalPrice {
+      centAmount
+      currencyCode
+    }
+    taxedPrice {
+      totalGross {
+        centAmount
+        currencyCode
+      }
+      totalNet {
+        centAmount
+        currencyCode
+      }
+      totalTax {
+        centAmount
+        currencyCode
+      }
+    }
+    shippingAddress {
+      firstName
+      lastName
+      streetName
+      streetNumber
+      city
+      postalCode
+      country
+      email
+      phone
+    }
+    billingAddress {
+      firstName
+      lastName
+      streetName
+      streetNumber
+      city
+      postalCode
+      country
+      email
+      phone
+    }
+    lineItems {
+      id
+      productId
+      name(locale: "es")
+      productSlug(locale: "es")
+      variant {
+        id
+        sku
+        images {
+          url
+        }
+      }
+      quantity
+      price {
+        value {
+          centAmount
+          currencyCode
+        }
+        discounted {
+          value {
+            centAmount
+            currencyCode
+          }
+        }
+      }
+      totalPrice {
+        centAmount
+        currencyCode
+      }
+      distributionChannel {
+        id
+      }
+    }
+    shippingInfo {
+      shippingMethodName
+      price {
+        centAmount
+        currencyCode
+      }
+      taxedPrice {
+        totalGross {
+          centAmount
+          currencyCode
+        }
+      }
+    }
+    paymentInfo {
+      payments {
+        id
+        amountPlanned {
+          centAmount
+          currencyCode
+        }
+        paymentMethodInfo {
+          paymentInterface
+          method
+        }
+      }
+    }
+  }
+} 
