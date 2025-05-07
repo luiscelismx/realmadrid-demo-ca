@@ -44,12 +44,36 @@ export default defineMessages({
     id: 'Welcome.productLinkContent',
     defaultMessage: 'Ver productos por tienda',
   },
+  productbySelectionLinkTitle: {
+    id: 'Welcome.productbySelectionLinkTitle',
+    defaultMessage: 'Productos por Selección',
+  },
+  productbySelectionLinkContent: {
+    id: 'Welcome.productbySelectionLinkContent',
+    defaultMessage: 'Ver productos filtrados por selección de productos',
+  },
+  productbyProviderLinkTitle: {
+    id: 'Welcome.productbyProviderLinkTitle',
+    defaultMessage: 'Productos por Proveedor',
+  },
+  productbyProviderLinkContent: {
+    id: 'Welcome.productbyProviderLinkContent',
+    defaultMessage: 'Ver productos por proveedor',
+  },
   ordersLinkTitle: {
     id: 'Welcome.ordersLinkTitle',
     defaultMessage: 'Pedidos',
   },
   ordersLinkContent: {
     id: 'Welcome.ordersLinkContent',
-    defaultMessage: 'Ver los pedidos realizados',
+    defaultMessage: 'View and manage orders.',
+  },
+  cardUserManagementTitle: {
+    id: 'Welcome.cardUserManagementTitle',
+    defaultMessage: 'User Management',
+  },
+  cardUserManagementContent: {
+    id: 'Welcome.cardUserManagementContent',
+    defaultMessage: 'Manage application users and their assigned providers.',
   },
 });

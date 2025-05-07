@@ -1,40 +1,48 @@
-# Consulta para obtener productos filtrados por product selection
-query FetchProductsByStore($productSelectionId: String!) {
-  productSelection(id: $productSelectionId) { 
-    id
-    productRefs {
-      results {
-        product {
-          id
-          key  
-          productType {
-            name
-          }
-          skus 
-          lastModifiedAt
-          createdAt
-          masterData {
-            current {              
-              masterVariant {
-                id
-                sku
-                prices {
-                  id
-                  value {
-                    currencyCode
-                    centAmount
-                  }
-                }
+# Consulta para obtener productos filtrados por distributionChannels
+query FetchProductsByStore($limit: Int!, $offset: Int!, $sort: [String!], $where: String!) {
+  products(
+    limit: $limit
+    offset: $offset
+    sort: $sort
+    where: $where
+  )
+    results {
+      id
+      key  
+      productType {
+        name
+      }
+      skus 
+      lastModifiedAt
+      createdAt
+      masterData {
+        current {              
+          masterVariant {
+            id
+            sku
+            prices {
+              id
+              value {
+                currencyCode
+                centAmount
               }
+            }
+            distributionChannels {
+              id
+              key
               nameAllLocales {
                 locale
                 value
-              }              
+              }
             }
-            published
           }
+          nameAllLocales {
+            locale
+            value
+          }              
         }
+        published
       }
     }
-  }
 }
+

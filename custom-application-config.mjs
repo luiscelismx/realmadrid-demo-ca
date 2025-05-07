@@ -17,8 +17,8 @@ const config = {
     },
   },
   oAuthScopes: {
-    view: ['view_products', 'view_product_selections', "view_orders"],
-    manage: ['manage_products', 'manage_stores', "manage_orders"],
+    view: ['view_products', 'view_product_selections', "view_orders", "view_customers", "view_customer_groups"],
+    manage: ['manage_products', 'manage_stores', "manage_orders", "manage_customers", "manage_customer_groups"],
   },
   icon: '${path:@commercetools-frontend/assets/application-icons/star.svg}',
   mainMenuLink: {
@@ -34,14 +34,26 @@ const config = {
       permissions: [PERMISSIONS.View],
     },
     {
-      uriPath: 'products-by-store',
-      defaultLabel: 'Productos por Tienda',
+      uriPath: 'products-by-selection',
+      defaultLabel: 'Productos por Selección',
+      labelAllLocales: [],
+      permissions: [PERMISSIONS.Manage],
+    },
+    {
+      uriPath: 'products-by-provider',
+      defaultLabel: 'Productos por Categoria',
       labelAllLocales: [],
       permissions: [PERMISSIONS.Manage],
     },
     {
       uriPath: 'orders',
       defaultLabel: 'Pedidos por Canal',
+      labelAllLocales: [],
+      permissions: [PERMISSIONS.Manage],
+    },
+    {
+      uriPath: 'user-management',
+      defaultLabel: 'Administración de Usuarios',
       labelAllLocales: [],
       permissions: [PERMISSIONS.Manage],
     },

@@ -1,0 +1,10 @@
+mutation CreateUser($container: String!, $key: String!, $value: String!) {
+  createOrUpdateCustomObject(draft: { container: $container, key: $key, value: $value }) {
+    id
+    key
+    version
+    value
+    createdAt
+    lastModifiedAt
+  }
+} 
