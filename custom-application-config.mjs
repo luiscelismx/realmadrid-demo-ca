@@ -40,7 +40,7 @@ const config = {
       permissions: [PERMISSIONS.Manage],
     },
     {
-      uriPath: 'products-by-provider',
+      uriPath: 'products-by-category',
       defaultLabel: 'Productos por Categoria',
       labelAllLocales: [],
       permissions: [PERMISSIONS.Manage],

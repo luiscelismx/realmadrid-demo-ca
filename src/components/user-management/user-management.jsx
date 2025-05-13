@@ -61,6 +61,10 @@ const columns = [
     key: 'active',
     label: <FormattedMessage id="UserManagement.column.active" defaultMessage="Active" />,
   },
+  {
+    key: 'elementType',
+    label: <FormattedMessage id="UserManagement.column.elementType" defaultMessage="Proveedor CF" />,
+  },
 ];
 
 const USER_CONTAINER = 'app-users';
@@ -118,6 +122,12 @@ const getColumns = (intl, onEdit, onToggleActive) => [
     label: <FormattedMessage id="UserManagement.column.productSelections" defaultMessage="Product Selections" />,
     flexGrow: 1,
     renderItem: (row) => <Text.Body>{row.productSelections}</Text.Body>,
+  },
+  {
+    key: 'elementType',
+    label: <FormattedMessage id="UserManagement.column.elementType" defaultMessage="Proveedor CF" />,
+    flexGrow: 1,
+    renderItem: (row) => <Text.Body>{row.elementType}</Text.Body>,
   },
   {
     key: 'createdAt',
@@ -367,6 +377,17 @@ query FetchUsers($container: String!, $limit: Int, $offset: Int, $sort: [String!
         return nameEs || nameDefault || selection.key || id;
       }).join(', ');
 
+      // Mapear los tipos de elemento a sus etiquetas
+      const elementTypeLabels = {
+        'f&b': 'Comida y Bebida',
+        'vip': 'Servicios VIP',
+        'merchandising': 'Merchandising'
+      };
+
+      const elementTypeNames = (userData.elementTypeIds || [])
+        .map(id => elementTypeLabels[id] || id)
+        .join(', ');
+
       // Convertir la fecha de creación
       const createdAt = safeFormatDate(userData.createdAt);
 
@@ -380,6 +401,7 @@ query FetchUsers($container: String!, $limit: Int, $offset: Int, $sort: [String!
         providers: providerNames,
         categories: categoryNames,
         productSelections: productSelectionNames,
+        elementType: elementTypeNames,
         createdAt,
         active: userData.active?.toString() || 'false',
       };

@@ -4,82 +4,52 @@ import FetchProductsByProviderQuery from './fetch-products-by-provider.ctp.graph
 import { convertToSortOptions } from '../../helpers';
 
 export const useProductsByProviderFetcher = (
-  { categoryIds, page, perPage, tableSorting } = {}
+  { providerKey, page, perPage, tableSorting } = {}
 ) => {
-  // Transformar el ordenamiento de tabla a formato compatible con GraphQL
-  const sortOptions = convertToSortOptions(tableSorting);
-
-  // Construir la cláusula where para filtrar por categorías
-  let whereClause = null;
+  console.log('useProductsByProviderFetcher - providerKey:', providerKey);
+  console.log('useProductsByProviderFetcher - executing query:', !!providerKey);
   
-  if (categoryIds) {
-    // Si es un solo ID, convertirlo a array
-    const categories = Array.isArray(categoryIds) ? categoryIds : [categoryIds];
-    
-    if (categories.length > 0) {
-      // Si hay múltiples categorías, usar la sintaxis "in"
-      if (categories.length === 1) {
-        whereClause = `masterData(current(categories(id="${categories[0]}")))`;
-      } else {
-        const categoryValues = categories.map(id => `"${id}"`).join(', ');
-        whereClause = `masterData(current(categories(id in (${categoryValues}))))`;
-      }
-    }
-  }
+  // Construir la cláusula where
+  const where = providerKey
+    ? `masterData(current(masterVariant(attributes(name="provider-key" and value(key="${providerKey}")))))`
+    : '';
 
-  // Log para depuración antes de la consulta
-  console.log('Ejecutando consulta con parámetros:', {
-    limit: perPage || 20,
-    offset: ((page || 1) - 1) * (perPage || 20),
-    sort: sortOptions || [],
-    where: whereClause || null,
-  });
-
+  // El hook siempre debe ser llamado, independientemente de si hay providerKey o no
   const { data, error, loading } = useMcQuery(FetchProductsByProviderQuery, {
-    variables: {      limit: perPage || 20,
-      offset: ((page || 1) - 1) * (perPage || 20),
-      sort: sortOptions || [],
-      where: whereClause || null,
+    variables: {
+      where,
+      limit: perPage.value,
+      offset: (page.value - 1) * perPage.value,
     },
     context: {
       target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
     },
+    // Saltamos la ejecución de la consulta si no hay providerKey seleccionado
+    skip: !providerKey,
+    // Importante: forzar a Apollo a reconocer cuando cambia la variable providerKey
     fetchPolicy: 'network-only',
-    // Solo ejecutar la consulta si hay categorías definidas
-    skip: !categoryIds || (Array.isArray(categoryIds) && categoryIds.length === 0),
-    onError: (err) => {
-      console.error('Error en la consulta GraphQL:', {
-        message: err.message,
-        graphQLErrors: err.graphQLErrors,
-        networkError: err.networkError,
-        extraInfo: err.extraInfo,
-      });
-    },
-    onCompleted: (result) => {
-      if (result && result.products) {
-        console.log(`Consulta completada: ${result.products.total} productos encontrados`);
-      } else {
-        console.warn('Consulta completada pero no se encontraron productos');
-      }
-    }
   });
 
-  // Log para depuración después de la consulta
+  // Agregar console.log para depuración
   if (error) {
-    console.error('Error detectado en la consulta:', error);
-  } else if (loading) {
-    console.log('Consulta en progreso...');
-  } else if (data) {
-    console.log(`Datos recibidos: ${data?.products?.results?.length || 0} productos`);
-  } else if (!loading && (!categoryIds || (Array.isArray(categoryIds) && categoryIds.length === 0))) {
-    console.log('Consulta omitida: No hay categoryIds definidos');
-  } else {
-    console.log('Estado desconocido de la consulta');
+    console.error('Error en consulta de productos por proveedor:', error);
+  }
+  
+  if (data) {
+    console.log('Resultados de consulta productos por proveedor:', { 
+      providerKey,
+      resultsCount: data.products?.results?.length || 0,
+      firstProduct: data.products?.results?.[0] ? {
+        id: data.products.results[0].id,
+        providerKey: data.products.results[0].masterData?.current?.masterVariant?.attributesRaw?.find(
+          attr => attr.name === 'provider-key'
+        )?.value?.[0]?.key
+      } : null
+    });
   }
 
-  // Simplemente devolvemos los datos sin procesar
   return {
-    productsPaginatedResult: data?.products || null,
+    productsPaginatedResult: data?.products,
     error,
     loading,
   };

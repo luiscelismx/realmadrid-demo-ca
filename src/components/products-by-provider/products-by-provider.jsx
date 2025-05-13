@@ -30,35 +30,34 @@ import ProductDetails from '../product-details';
 import { useQuery } from '@apollo/client/react';
 import { gql } from '@apollo/client';
 
-
-// Definición de columnas para la tabla de productos
-const columns = [
-  { key: 'name', label: 'Nombre', isSortable: true },
-  { key: 'sku', label: 'SKU' },
-  { key: 'productType', label: 'Tipo de producto' },
-  { key: 'availability', label: 'Disponibilidad' },
-  { key: 'status', label: 'Estado' },
-];
-
-// Renderizador de items para la tabla
 const itemRenderer = (item, column, dataLocale, projectLanguages) => {
   switch (column.key) {
     case 'name':
-      return item.masterData.current.nameAllLocales?.[0]?.value || '-';
+      return item.masterData.current.nameAllLocales[0]?.value;
     case 'productType':
       return item.productType.name;
     case 'sku':
       return item?.key || '-';
-    case 'availability':
-      return 'No filtrado';
+    case 'price':
+      const price = item.masterData.current.masterVariant?.prices?.[0]?.value;
+      if (!price) return '-';
+      return `${price.currencyCode} ${price.centAmount / 100}`;
+    case 'lastModifiedAt':
+      return item.lastModifiedAt;
     case 'status':
-      return item.masterData.published ? 'Publicado' : 'No publicado';
+      return item.masterData.published;
+    case 'createdAt':
+      return item.createdAt;
+    case 'providerKey':
+      return item.masterData.current.masterVariant?.attributes?.find(
+        attr => attr.name === 'provider-key'
+      )?.value || '-';
     default:
       return item[column.key];
   }
 };
 
-// GraphQL query para buscar el custom object del usuario por key
+// GraphQL query para buscar el custom object del usuario por key para recuperar su provider-key preferido
 const FETCH_USER_BY_KEY = gql`
   query FetchUserByKey($container: String!, $key: String!) {
     customObject(
@@ -78,8 +77,20 @@ const ProductsByProvider = (props) => {
   const { push } = useHistory();
   const { page, perPage } = usePaginationState();
   const tableSorting = useDataTableSortingState({ key: 'name', order: 'asc' });
-  const [userCategoryIds, setUserCategoryIds] = useState([]);
-  const [userLoaded, setUserLoaded] = useState(false);
+  
+  const columns = [
+    { key: 'name', label: intl.formatMessage(messages.name), isSortable: true },
+    { key: 'sku', label: intl.formatMessage(messages.sku) },
+    { key: 'productType', label: intl.formatMessage(messages.productType) },
+    { key: 'price', label: intl.formatMessage(messages.price) },
+    { key: 'providerKey', label: intl.formatMessage(messages.providerKey) },
+    { key: 'status', label: intl.formatMessage(messages.status) },
+    { key: 'createdAt', label: intl.formatMessage(messages.createdAt) },
+    { key: 'lastModifiedAt', label: intl.formatMessage(messages.lastModifiedAt) },
+  ];
+  
+  const [selectedProviderKey, setSelectedProviderKey] = useState('');
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
   
   const { dataLocale, projectLanguages, user } = useApplicationContext((context) => ({
     dataLocale: context.dataLocale,
@@ -87,10 +98,7 @@ const ProductsByProvider = (props) => {
     user: context.user,
   }));
 
-  // Obtener el ID del usuario del contexto
-  const userId = user?.id;
-
-  // Consultar el custom object del usuario por key (que es el ID del usuario)
+  // Consultar el custom object del usuario
   const { 
     data: userData, 
     loading: userLoading, 
@@ -98,231 +106,127 @@ const ProductsByProvider = (props) => {
   } = useQuery(FETCH_USER_BY_KEY, {
     variables: {
       container: "app-users",
-      key: userId,
+      key: user?.id,
     },
-    skip: !userId,
+    skip: !user?.id,
     context: {
       target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
     },
   });
 
-  // Efecto para extraer el ID del canal del usuario cuando se cargan los datos
+  // Efecto para procesar el custom object del usuario y establecer el provider-key
   useEffect(() => {
-    if (!userLoaded && userData && !userLoading) {
-      try {
-        const userCustomObject = userData.customObject;
-        
-        if (userCustomObject) {
-          console.log('Usuario encontrado:', userCustomObject);
-          
-          // Parsear el value si es string
-          const userValue = typeof userCustomObject.value === 'string' 
-            ? JSON.parse(userCustomObject.value) 
-            : userCustomObject.value;
-          
+    if (userLoading || !userData?.customObject?.value) return;
 
-          // Obtener categoryIds del usuario
-          const categoryIds = Array.isArray(userValue.categoryIds) ? userValue.categoryIds : [];
-          console.log('Category IDs del usuario:', categoryIds);
-          
-          if (categoryIds.length > 0) {
-            console.log('Category IDs seleccionados del usuario:', categoryIds);
-            setUserCategoryIds(categoryIds);
-          } else {
-            console.warn('El usuario no tiene categorías asignadas');
-          }
-        } else {
-          console.warn('No se encontró el custom object del usuario');
-        }
-      } catch (error) {
-        console.error('Error al procesar datos del usuario:', error);
-      } finally {
-        setUserLoaded(true);
+    try {
+      console.log("Procesando datos del usuario:", userData.customObject);
+      const userValue = userData.customObject.value;
+      
+      if (userValue.elementTypeIds) {
+        console.log("Provider key encontrado en usuario:", userValue.elementTypeIds);
+        setSelectedProviderKey(userValue.elementTypeIds);
+        setIsInitialLoadComplete(true);
+      } else {
+        console.log("No se encontró provider key en el usuario");
+        setIsInitialLoadComplete(true);
       }
+    } catch (error) {
+      console.error("Error procesando datos del usuario:", error);
+      setIsInitialLoadComplete(true);
     }
-  }, [userData, userLoading, userLoaded]);
+  }, [userData, userLoading]);
 
-  // Obtener productos usando el hook (filtrando por categoryIds)
-  const { 
-    productsPaginatedResult, 
-    error: productsError, 
-    loading: productsLoading 
+  // Obtener productos filtrados
+  const {
+    productsPaginatedResult,
+    error: productsError,
+    loading: productsLoading,
   } = useProductsByProviderFetcher({
-    categoryIds: userCategoryIds,
-    page: page.value,
-    perPage: perPage.value,
-    tableSorting: tableSorting.value,
+    providerKey: selectedProviderKey,
+    page,
+    perPage,
+    tableSorting,
   });
-
-  const error = userError || productsError;
-
-  // Manejo mejorado de errores
-  if (error) {
-    console.error('Error detectado:', error);
-    
-    // Extraer detalles específicos para GraphQL
-    const graphQLErrors = error.graphQLErrors || [];
-    const networkError = error.networkError;
-    
-    return (
-      <Spacings.Stack scale="m">
-        <ContentNotification type="error">
-          <Text.Headline as="h3">Error al cargar los datos</Text.Headline>
-          <Text.Body>{getErrorMessage(error)}</Text.Body>
-          
-          {/* Detalles adicionales para ayudar a depurar */}
-          {graphQLErrors.length > 0 && (
-            <Spacings.Stack scale="s">
-              <Text.Body>Errores GraphQL:</Text.Body>
-              <ul>
-                {graphQLErrors.map((gqlError, index) => (
-                  <li key={index}>
-                    <Text.Body>{gqlError.message || "Error desconocido"}</Text.Body>
-                  </li>
-                ))}
-              </ul>
-            </Spacings.Stack>
-          )}
-          
-          {networkError && (
-            <Text.Body>Error de red: {networkError.message || "Error de conexión"}</Text.Body>
-          )}
-          
-          {userCategoryIds.length > 0 && (
-            <Text.Body>
-              <strong>Intentando filtrar por categoría(s):</strong> {userCategoryIds.join(', ')}
-            </Text.Body>
-          )}
-        </ContentNotification>
-        
-        <FlatButton
-          as={RouterLink}
-          to={props.linkToWelcome}
-          label={intl.formatMessage(messages.backToWelcome)}
-          icon={<BackIcon />}
-        />
-      </Spacings.Stack>
-    );
-  }
-
-  // Mostrar spinner mientras se cargan los datos del usuario
-  if (!userLoaded && (userLoading || !userData)) {
-    return (
-      <Spacings.Stack scale="s" alignItems="center">
-        <LoadingSpinner />
-        <Text.Body intlMessage={messages.loadingUserData} />
-      </Spacings.Stack>
-    );
-  }
 
   return (
     <Spacings.Stack scale="xl">
       <Spacings.Stack scale="xs">
-        <FlatButton
-          as={RouterLink}
-          to={props.linkToWelcome}
-          label={intl.formatMessage(messages.backToWelcome)}
-          icon={<BackIcon />}
-        />
         <Text.Headline as="h2" intlMessage={messages.title} />
+        <Text.Subheadline as="h4" intlMessage={messages.subtitle} />
       </Spacings.Stack>
 
-      {userData && userData.customObject && (
-        <Spacings.Stack scale="m">
-          <Card>
-            <Spacings.Stack scale="m">
-              <Text.Headline as="h3" intlMessage={messages.userInfo} />
-              <Spacings.Stack scale="s">
+      <Constraints.Horizontal max={16}>
+        <Card>
+          <Spacings.Stack scale="l">
+            {userLoading && (
+              <ContentNotification type="info">
+                <Text.Body intlMessage={messages.loadingUserData} />
+              </ContentNotification>
+            )}
+            {userError && (
+              <ContentNotification type="error">
                 <Text.Body>
-                  <strong>ID:</strong> {userId || 'No disponible'}
+                  {getErrorMessage(userError)}
                 </Text.Body>
-                {(() => {
-                  try {
-                    const userObject = userData.customObject;
-                    const userValue = typeof userObject.value === 'string' 
-                      ? JSON.parse(userObject.value) 
-                      : userObject.value;
-                    
-                    const categoryIds = Array.isArray(userValue.categoryIds) ? userValue.categoryIds : [];
-                    
-                    return (
-                      <>
-                        <Text.Body>
-                          <strong>Email:</strong> {userValue.email || 'No disponible'}
-                        </Text.Body>
-                        <Text.Body>
-                          <strong>Nombre:</strong> {userValue.name || 'No disponible'}
-                        </Text.Body>
-                        <Text.Body>
-                          <strong>Roles:</strong> {Array.isArray(userValue.roles) ? userValue.roles.join(', ') : 'No disponible'}
-                        </Text.Body>
-                        <Text.Body>
-                          <strong>Categorías asignadas:</strong> {categoryIds.length > 0 ? categoryIds.join(', ') : 'No asignadas'}
-                        </Text.Body>
-                      </>
-                    );
-                  } catch (error) {
-                    return <Text.Body>Error al procesar los datos del usuario: {error.message}</Text.Body>;
-                  }
-                })()}
-              </Spacings.Stack>
-            </Spacings.Stack>
-          </Card>
-        </Spacings.Stack>
-      )}
+              </ContentNotification>
+            )}
+            {(productsLoading || !isInitialLoadComplete) && selectedProviderKey && (
+              <ContentNotification type="info">
+                <Text.Body intlMessage={messages.loadingProducts} />
+              </ContentNotification>
+            )}
+            {productsError && (
+              <ContentNotification type="error">
+                <Text.Body>
+                  {getErrorMessage(productsError)}
+                  <br />
+                  <strong>Provider Key:</strong> {selectedProviderKey}
+                  <br />
+                  <strong>Detalles del error:</strong> {JSON.stringify(productsError)}
+                </Text.Body>
+              </ContentNotification>
+            )}
 
-      {userCategoryIds.length === 0 && userLoaded && (
-        <ContentNotification type="warning">
-          <Text.Body intlMessage={messages.noCategory} />
-        </ContentNotification>
-      )}
-
-      {productsLoading && userCategoryIds.length > 0 && (
-        <Spacings.Stack scale="s" alignItems="center">
-          <LoadingSpinner />
-          <Text.Body intlMessage={messages.loadingProducts} />
-        </Spacings.Stack>
-      )}
-
-      {productsPaginatedResult ? (
-        <Spacings.Stack scale="l">
-          
-          <DataTable
-            isCondensed
-            columns={columns}
-            rows={productsPaginatedResult.results || []}
-            itemRenderer={(item, column) => itemRenderer(item, column, dataLocale, projectLanguages)}
-            sortedBy={tableSorting.value.key}
-            sortDirection={tableSorting.value.order}
-            onSortChange={tableSorting.onChange}
-            onRowClick={(row) => push(`${match.url}/${row.id}`)}
-          />
-          {productsPaginatedResult.results && productsPaginatedResult.results.length > 0 ? (
-            <Pagination
-              page={page.value}
-              onPageChange={page.onChange}
-              perPage={perPage.value}
-              onPerPageChange={perPage.onChange}
-              totalItems={productsPaginatedResult.total}
-            />
-          ) : (
-            <ContentNotification type="info">
-              <Text.Body intlMessage={messages.noResults} />
-            </ContentNotification>
-          )}
-          <Switch>
-            <SuspendedRoute path={`${match.path}/:productId`}>
-              <ProductDetails 
-                onClose={() => push(`${match.url}`)} 
+            {productsPaginatedResult?.results?.length > 0 && (
+              <DataTable
+                isCondensed
+                columns={columns}
+                rows={productsPaginatedResult.results}
+                itemRenderer={(item, column) =>
+                  itemRenderer(item, column, dataLocale, projectLanguages)
+                }
+                maxHeight={600}
+                onRowClick={(row) => push(`${match.url}/${row.id}`)}
+                onSortChange={tableSorting.onChange}
+                sortDirection={tableSorting.value.order}
+                sortedBy={tableSorting.value.key}
               />
-            </SuspendedRoute>
-          </Switch>
-        </Spacings.Stack>
-      ) : !productsLoading ? (
-        <ContentNotification type="info">
-          <Text.Body intlMessage={messages.noResults} />
-        </ContentNotification>
-      ) : null}
+            )}
+
+            {productsPaginatedResult?.results?.length === 0 && !productsLoading && isInitialLoadComplete && (
+              <ContentNotification type="info">
+                <Text.Body intlMessage={messages.notFoundProducts} />
+              </ContentNotification>
+            )}
+
+            {productsPaginatedResult?.results?.length > 0 && (
+              <Pagination
+                page={page.value}
+                onPageChange={page.onChange}
+                perPage={perPage.value}
+                onPerPageChange={perPage.onChange}
+                totalItems={productsPaginatedResult.total}
+              />
+            )}
+          </Spacings.Stack>
+        </Card>
+      </Constraints.Horizontal>
+
+      <Switch>
+        <SuspendedRoute path={`${match.path}/:id`}>
+          <ProductDetails onClose={() => push(match.url)} />
+        </SuspendedRoute>
+      </Switch>
     </Spacings.Stack>
   );
 };

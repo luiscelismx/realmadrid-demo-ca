@@ -4,44 +4,66 @@ export default defineMessages({
   title: {
     id: 'ProductsByProvider.title',
     defaultMessage: 'Productos por Proveedor',
+    description: 'Título de la página de productos por proveedor',
   },
-  backToWelcome: {
-    id: 'ProductsByProvider.backToWelcome',
-    defaultMessage: 'Volver a la página de bienvenida',
+  subtitle: {
+    id: 'ProductsByProvider.subtitle',
+    defaultMessage: 'Lista de productos filtrados por proveedor',
+    description: 'Subtítulo de la página de productos por proveedor',
   },
-  demoHint: {
-    id: 'ProductsByProvider.demoHint',
-    defaultMessage:
-      'Este componente muestra los productos disponibles en el canal del proveedor asignado al usuario actual.',
+  name: {
+    id: 'ProductsByProvider.name',
+    defaultMessage: 'Nombre',
+    description: 'Etiqueta para la columna de nombre',
+  },
+  sku: {
+    id: 'ProductsByProvider.sku',
+    defaultMessage: 'SKU',
+    description: 'Etiqueta para la columna de SKU',
+  },
+  productType: {
+    id: 'ProductsByProvider.productType',
+    defaultMessage: 'Tipo de Producto',
+    description: 'Etiqueta para la columna de tipo de producto',
+  },
+  price: {
+    id: 'ProductsByProvider.price',
+    defaultMessage: 'Precio',
+    description: 'Etiqueta para la columna de precio',
+  },
+  providerKey: {
+    id: 'ProductsByProvider.providerKey',
+    defaultMessage: 'Proveedor',
+    description: 'Etiqueta para la columna de proveedor',
+  },
+  status: {
+    id: 'ProductsByProvider.status',
+    defaultMessage: 'Estado',
+    description: 'Etiqueta para la columna de estado',
+  },
+  createdAt: {
+    id: 'ProductsByProvider.createdAt',
+    defaultMessage: 'Fecha de Creación',
+    description: 'Etiqueta para la columna de fecha de creación',
+  },
+  lastModifiedAt: {
+    id: 'ProductsByProvider.lastModifiedAt',
+    defaultMessage: 'Última Modificación',
+    description: 'Etiqueta para la columna de última modificación',
+  },
+  loadingUserData: {
+    id: 'ProductsByProvider.loadingUserData',
+    defaultMessage: 'Cargando datos del usuario...',
+    description: 'Mensaje de carga de datos del usuario',
   },
   loadingProducts: {
     id: 'ProductsByProvider.loadingProducts',
     defaultMessage: 'Cargando productos...',
+    description: 'Mensaje de carga de productos',
   },
-  loadingUserData: {
-    id: 'ProductsByProvider.loadingUserData',
-    defaultMessage: 'Cargando información del usuario...',
-  },
-  noProvider: {
-    id: 'ProductsByProvider.noProvider',
-    defaultMessage:
-      'No se ha encontrado un proveedor asignado al usuario actual. Por favor, contacte al administrador.',
-  },
-  noCategory: {
-    id: 'ProductsByProvider.noCategory',
-    defaultMessage:
-      'No se ha encontrado una categoría asignada al usuario actual. Por favor, contacte al administrador para asignar una categoría.',
-  },
-  noResults: {
-    id: 'ProductsByProvider.noResults',
-    defaultMessage: 'No se encontraron productos para la categoría seleccionada.',
-  },
-  channelId: {
-    id: 'ProductsByProvider.channelId',
-    defaultMessage: 'ID del Canal del Proveedor',
-  },
-  userInfo: {
-    id: 'ProductsByProvider.userInfo',
-    defaultMessage: 'Información del Usuario',
+  notFoundProducts: {
+    id: 'ProductsByProvider.notFoundProducts',
+    defaultMessage: 'No se encontraron productos para el proveedor seleccionado',
+    description: 'Mensaje cuando no se encuentran productos',
   },
 }); 

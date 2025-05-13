@@ -181,6 +181,10 @@ export default defineMessages({
       id: 'UserManagement.column.productSelections',
       defaultMessage: 'Product Selections',
     },
+    elementType: {
+      id: 'UserManagement.column.elementType',
+      defaultMessage: 'Proveedor CF',
+    },
   },
   productSelectionsLabel: {
     id: 'UserManagement.label.productSelections',
@@ -189,6 +193,14 @@ export default defineMessages({
   productSelectionsValidationError: {
     id: 'UserManagement.error.productSelections',
     defaultMessage: 'At least one product selection is required',
+  },
+  elementTypeLabel: {
+    id: 'UserManagement.label.elementType',
+    defaultMessage: 'Proveedor CF',
+  },
+  elementTypeValidationError: {
+    id: 'UserManagement.error.elementType',
+    defaultMessage: 'Debe seleccionar al menos un proveedor CF',
   },
   // Add more messages here as needed
 }); 

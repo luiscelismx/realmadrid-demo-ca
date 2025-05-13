@@ -1,4 +1,4 @@
-# Consulta para obtener productos filtrados por provider-key
+# Consulta para obtener productos por categoría
 query FetchProductsByProvider($limit: Int!, $offset: Int!, $sort: [String!], $where: String!) {
   products(
     limit: $limit
@@ -15,26 +15,20 @@ query FetchProductsByProvider($limit: Int!, $offset: Int!, $sort: [String!], $wh
       productType {
         name
       }
-      skus
       lastModifiedAt
       createdAt
       masterData {
         current {
+          categories {
+            id    
+          }
           masterVariant {
             id
             sku
-            attributesRaw {
-              name
-              value
-            }
-            prices {
-              id
-              value {
-                currencyCode
-                centAmount
-              }
-            }
-
+          }
+          variants {
+            id
+            sku
           }
           nameAllLocales {
             locale
@@ -45,4 +39,4 @@ query FetchProductsByProvider($limit: Int!, $offset: Int!, $sort: [String!], $wh
       }
     }
   }
-} 
+}

@@ -23,6 +23,7 @@ const userToFormValues = (user) => {
       providerIds: [],
       categoryIds: [],
       productSelectionIds: [],
+      elementTypeIds: [],
       active: true,
     };
   }
@@ -37,6 +38,7 @@ const userToFormValues = (user) => {
     providerIds: value.providerIds || [],
     categoryIds: value.categoryIds || [],
     productSelectionIds: value.productSelectionIds || [],
+    elementTypeIds: value.elementTypeIds || [],
     active: value.active,
   };
 };
@@ -57,6 +59,7 @@ const formValuesToUser = (values, user) => {
       providerIds: values.providerIds,
       categoryIds: values.categoryIds,
       productSelectionIds: values.productSelectionIds,
+      elementTypeIds: values.elementTypeIds,
       active: values.active,
       updatedAt: new Date().toISOString(),
     },
@@ -127,6 +130,11 @@ const UserDetailsForm = (props) => {
       errors.productSelectionIds = intl.formatMessage(messages.productSelectionsValidationError);
     }
     
+    // Validación de tipo de elemento
+    if (!values.elementTypeIds || values.elementTypeIds.length === 0) {
+      errors.elementTypeIds = intl.formatMessage(messages.elementTypeValidationError);
+    }
+    
     return errors;
   };
 
@@ -163,6 +171,13 @@ const UserDetailsForm = (props) => {
       label: nameEs || nameDefault || selection.key || selection.id,
     };
   });
+
+  // Opciones para el tipo de elemento
+  const elementTypeOptions = [
+    { value: 'f&b', label: 'Comida y Bebida' },
+    { value: 'vip', label: 'Servicios VIP' },
+    { value: 'merchandising', label: 'Merchandising' },
+  ];
 
   const formik = useFormik({
     initialValues,
@@ -253,6 +268,20 @@ const UserDetailsForm = (props) => {
         horizontalConstraint="scale"
       />
 
+      <SelectField
+        name="elementTypeIds"
+        title={intl.formatMessage(messages.elementTypeLabel)}
+        value={formik.values.elementTypeIds}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        touched={formik.touched.elementTypeIds}
+        errors={formik.errors.elementTypeIds ? [formik.errors.elementTypeIds] : []}
+        options={elementTypeOptions}
+        isMulti
+        isDisabled={isReadOnly}
+        horizontalConstraint="scale"
+      />
+
       <CheckboxInput
         name="active"
         value={formik.values.active}
@@ -286,6 +315,7 @@ UserDetailsForm.propTypes = {
     providerIds: PropTypes.arrayOf(PropTypes.string),
     categoryIds: PropTypes.arrayOf(PropTypes.string),
     productSelectionIds: PropTypes.arrayOf(PropTypes.string),
+    elementTypeIds: PropTypes.arrayOf(PropTypes.string),
     active: PropTypes.bool,
   }).isRequired,
   onSubmit: PropTypes.func.isRequired,
