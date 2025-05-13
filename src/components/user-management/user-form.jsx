@@ -43,15 +43,9 @@ const userToFormValues = (user) => {
   };
 };
 
-// Función para generar un ID aleatorio
-const generateRandomId = () => {
-  return Math.random().toString(36).substring(2, 15) + 
-         Math.random().toString(36).substring(2, 15);
-};
-
 const formValuesToUser = (values, user) => {
   const userData = {
-    key: user?.key || `user-${generateRandomId()}`,
+    key: user?.key || values.email.toLowerCase().replace('@', '~'),
     value: {
       email: values.email.toLowerCase(),
       name: values.name,
