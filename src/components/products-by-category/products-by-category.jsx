@@ -87,8 +87,8 @@ const ProductsByCategory = (props) => {
     user: context.user,
   }));
 
-  // Obtener el ID del usuario del contexto
-  const userId = user?.id;
+  // Obtener el ID del usuario del contexto usando su email
+  const userId = user?.email ? user.email.toLowerCase().replace('@', '~') : null;
 
   // Consultar el custom object del usuario por key (que es el ID del usuario)
   const { 
