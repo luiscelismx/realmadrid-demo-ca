@@ -1,1 +1,15 @@
-{}
+{
+  "ProductsByProvider.title": "Products by Provider",
+  "ProductsByProvider.subtitle": "List of products filtered by provider",
+  "ProductsByProvider.name": "Name",
+  "ProductsByProvider.sku": "SKU",
+  "ProductsByProvider.productType": "Product Type",
+  "ProductsByProvider.price": "Price",
+  "ProductsByProvider.providerKey": "Provider",
+  "ProductsByProvider.status": "Status",
+  "ProductsByProvider.createdAt": "Created At",
+  "ProductsByProvider.lastModifiedAt": "Last Modified",
+  "ProductsByProvider.loadingUserData": "Loading user data...",
+  "ProductsByProvider.loadingProducts": "Loading products...",
+  "ProductsByProvider.notFoundProducts": "No products found for the selected provider"
+}

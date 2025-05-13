@@ -1,0 +1,15 @@
+query FetchProductSelections {
+  productSelections {
+    total
+    count
+    offset
+    results {
+      id
+      key
+      nameAllLocales {
+        value
+        locale
+      }
+    }
+  }
+} 

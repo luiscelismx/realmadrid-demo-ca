@@ -86,7 +86,7 @@ const Welcome = () => {
           <Grid
             gridGap="16px"
             gridAutoColumns="1fr"
-            gridTemplateColumns="repeat(4, 1fr)"
+            gridTemplateColumns="repeat(5, 1fr)"
           >
             <InfoCard
               title={intl.formatMessage(messages.cardDocumentationTitle)}
@@ -106,9 +106,29 @@ const Welcome = () => {
               linkTo={`${match.url}/channels`}
             />
             <InfoCard
-              title={intl.formatMessage(messages.productLinkTitle)}
-              content={intl.formatMessage(messages.productLinkContent)}
-              linkTo={`${match.url}/products-by-store`}
+              title={intl.formatMessage(messages.productbySelectionLinkTitle)}
+              content={intl.formatMessage(messages.productbySelectionLinkContent)}
+              linkTo={`${match.url}/products-by-selection`}
+            />
+            <InfoCard
+              title={intl.formatMessage(messages.productbyProviderLinkTitle)}
+              content={intl.formatMessage(messages.productbyProviderLinkContent)}
+              linkTo={`${match.url}/products-by-provider`}
+            />
+            <InfoCard
+              title={intl.formatMessage(messages.ordersLinkTitle)}
+              content={intl.formatMessage(messages.ordersLinkContent)}
+              linkTo={`${match.url}/orders`}
+            />
+            <InfoCard
+              title={intl.formatMessage(messages.cardUserManagementTitle)}
+              content={intl.formatMessage(messages.cardUserManagementContent)}
+              linkTo={`${match.url}/user-management`}
+            />
+            <InfoCard
+              title={intl.formatMessage(messages.productbyCategoryLinkTitle)}
+              content={intl.formatMessage(messages.productbyCategoryLinkContent)}
+              linkTo={`${match.url}/products-by-category`}
             />
           </Grid>
         </Spacings.Stack>

@@ -1,8 +1,12 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import Channels from './components/channels';
-import Products from './components/products';
+import ProductsByCategory from './components/products-by-category';
+import ProductsBySelection from './components/products-by-selection';
+import ProductsByProvider from './components/products-by-provider';
+import Orders from './components/orders';
 import Welcome from './components/welcome';
+import { UserManagement } from './components';
 
 const ApplicationRoutes = () => {
   const match = useRouteMatch();
@@ -24,8 +28,21 @@ const ApplicationRoutes = () => {
         <Route path={`${match.path}/channels`}>
           <Channels linkToWelcome={match.url} />
         </Route>
-        <Route path={`${match.path}/products-by-store`}>
-          <Products linkToWelcome={match.url} />
+
+        <Route path={`${match.path}/products-by-selection`}>
+          <ProductsBySelection linkToWelcome={match.url} />
+        </Route>
+        <Route path={`${match.path}/products-by-category`}>
+          <ProductsByCategory linkToWelcome={match.url} />
+        </Route>
+        <Route path={`${match.path}/products-by-provider`}>
+          <ProductsByProvider linkToWelcome={match.url} />
+        </Route>
+        <Route path={`${match.path}/orders`}>
+          <Orders linkToWelcome={match.url} />
+        </Route>
+        <Route path={`${match.path}/user-management`}>
+          <UserManagement linkToWelcome={match.url} />
         </Route>
         <Route>
           <Welcome />

@@ -3,38 +3,35 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'Welcome.title',
-    defaultMessage: 'Develop applications for the Merchant Center',
+    defaultMessage: 'Bienvenido a la aplicación de demostración',
   },
   subtitle: {
     id: 'Welcome.subtitle',
-    defaultMessage:
-      'Welcome to Custom Applications! To get started, inspect the source code to get familiar with the setup, the folder structure, the development tools, etc. and read the README file for additional information.',
+    defaultMessage: 'Esta es una aplicación de demostración para mostrar cómo crear una aplicación personalizada en el Merchant Center.',
   },
   cardDocumentationTitle: {
     id: 'Welcome.cardDocumentationTitle',
-    defaultMessage: 'Documentation',
+    defaultMessage: 'Documentación',
   },
   cardDocumentationContent: {
     id: 'Welcome.cardDocumentationContent',
-    defaultMessage: 'Learn more about Custom Applications.',
+    defaultMessage: 'Aprende más sobre cómo crear aplicaciones personalizadas en el Merchant Center.',
   },
   cardDesignSystemTitle: {
     id: 'Welcome.cardDesignSystemTitle',
-    defaultMessage: 'Design System',
+    defaultMessage: 'Sistema de Diseño',
   },
   cardDesignSystemContent: {
     id: 'Welcome.cardDesignSystemContent',
-    defaultMessage:
-      'Explore the UI components to develop Custom Applications and learn more about the Design System.',
+    defaultMessage: 'Explora los componentes y estilos disponibles en el sistema de diseño.',
   },
   cardChannelsTitle: {
     id: 'Welcome.cardChannelsTitle',
-    defaultMessage: 'Fetching channels',
+    defaultMessage: 'Canales',
   },
   cardChannelsContent: {
     id: 'Welcome.cardChannelsContent',
-    defaultMessage:
-      'Demo example to fetch some data using GraphQL and displaying it in a paginated table.',
+    defaultMessage: 'Gestiona los canales de tu proyecto.',
   },
   productLinkTitle: {
     id: 'Welcome.productLinkTitle',
@@ -43,5 +40,45 @@ export default defineMessages({
   productLinkContent: {
     id: 'Welcome.productLinkContent',
     defaultMessage: 'Ver productos por tienda',
+  },
+  productbySelectionLinkTitle: {
+    id: 'Welcome.productbySelectionLinkTitle',
+    defaultMessage: 'Productos por Selección',
+  },
+  productbySelectionLinkContent: {
+    id: 'Welcome.productbySelectionLinkContent',
+    defaultMessage: 'Ver productos filtrados por selección.',
+  },
+  productbyProviderLinkTitle: {
+    id: 'Welcome.productbyProviderLinkTitle',
+    defaultMessage: 'Productos por Proveedor',
+  },
+  productbyProviderLinkContent: {
+    id: 'Welcome.productbyProviderLinkContent',
+    defaultMessage: 'Ver productos filtrados por proveedor.',
+  },
+  productbyCategoryLinkTitle: {
+    id: 'Welcome.productbyCategoryLinkTitle',
+    defaultMessage: 'Productos por Categoría',
+  },
+  productbyCategoryLinkContent: {
+    id: 'Welcome.productbyCategoryLinkContent',
+    defaultMessage: 'Ver productos filtrados por categoría.',
+  },
+  ordersLinkTitle: {
+    id: 'Welcome.ordersLinkTitle',
+    defaultMessage: 'Órdenes',
+  },
+  ordersLinkContent: {
+    id: 'Welcome.ordersLinkContent',
+    defaultMessage: 'Gestiona las órdenes de tu proyecto.',
+  },
+  cardUserManagementTitle: {
+    id: 'Welcome.cardUserManagementTitle',
+    defaultMessage: 'Gestión de Usuarios',
+  },
+  cardUserManagementContent: {
+    id: 'Welcome.cardUserManagementContent',
+    defaultMessage: 'Gestiona los usuarios de tu proyecto.',
   },
 });

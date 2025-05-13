@@ -6,6 +6,11 @@ const getChunkImport = (locale) => {
       return import(
         /* webpackChunkName: "app-i18n-de" */ './i18n/data/de.json'
       );
+    case 'es':
+    case 'es-ES':
+      return import(
+        /* webpackChunkName: "app-i18n-es" */ './i18n/data/es.json'
+      );
     default:
       return import(
         /* webpackChunkName: "app-i18n-en" */ './i18n/data/en.json'

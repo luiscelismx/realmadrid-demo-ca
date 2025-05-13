@@ -4,27 +4,28 @@ import FetchProductsByStoreQuery from './fetch-products-by-store.ctp.graphql';
 import { convertToSortOptions } from '../../helpers';
 
 export const useProductsByStoreFetcher = (
-  { productSelectionId, page, perPage, tableSorting } = {}
+  { distributionChannelId, page, perPage, tableSorting } = {}
 ) => {
-  // El hook siempre debe ser llamado, independientemente de si hay productSelectionId o no
+  const whereClause = `masterData(current(categories(id="${categories[0]}")))`;
+  // El hook siempre debe ser llamado, independientemente de si hay distributionChannelId o no
   const { data, error, loading } = useMcQuery(FetchProductsByStoreQuery, {
     variables: {
-      productSelectionId: productSelectionId,
+      distributionChannelId: whereClause,
     },
     context: {
       target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
     },
-    // Saltamos la ejecución de la consulta si no hay productSelectionId seleccionado
-    skip: !productSelectionId,
+    // Saltamos la ejecución de la consulta si no hay distributionChannelId seleccionado
+    skip: !distributionChannelId,
   });
 
   // Transformar los datos para mantener una estructura similar a la anterior
-  const productsPaginatedResult = data?.productSelection?.productRefs 
+  const productsPaginatedResult = data?.products 
     ? {
-        total: data.productSelection.productRefs.results.length,
-        count: data.productSelection.productRefs.results.length,
-        offset: 0,
-        results: data.productSelection.productRefs.results.map(ref => ref.product),
+        total: data.products.total,
+        count: data.products.count,
+        offset: data.products.offset,
+        results: data.products.results,
       }
     : null;
 

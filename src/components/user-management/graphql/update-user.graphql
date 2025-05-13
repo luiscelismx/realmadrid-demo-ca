@@ -1,0 +1,15 @@
+mutation UpdateUser($key: String!, $version: Long!, $value: String!) {
+  createOrUpdateCustomObject(draft: {
+    key: $key, 
+    container: "app-users",
+    version: $version, 
+    value:  $value 
+  })  {  
+    id
+    key
+    version
+    value
+    createdAt
+    lastModifiedAt
+  }
+  }

@@ -1,25 +1,32 @@
-# Consulta para obtener productos filtrados por distributionChannels
-query FetchProductsByStore($limit: Int!, $offset: Int!, $sort: [String!], $where: String!) {
+# Consulta para obtener productos filtrados por provider-key
+query FetchProductsByProvider($limit: Int!, $offset: Int!, $sort: [String!], $where: String!) {
   products(
     limit: $limit
     offset: $offset
     sort: $sort
     where: $where
-  )
+  ) {
+    total
+    count
+    offset
     results {
       id
-      key  
+      key
       productType {
         name
       }
-      skus 
+      skus
       lastModifiedAt
       createdAt
       masterData {
-        current {              
+        current {
           masterVariant {
             id
             sku
+            attributesRaw {
+              name
+              value
+            }
             prices {
               id
               value {
@@ -27,22 +34,15 @@ query FetchProductsByStore($limit: Int!, $offset: Int!, $sort: [String!], $where
                 centAmount
               }
             }
-            distributionChannels {
-              id
-              key
-              nameAllLocales {
-                locale
-                value
-              }
-            }
+
           }
           nameAllLocales {
             locale
             value
-          }              
+          }
         }
         published
       }
     }
-}
-
+  }
+} 

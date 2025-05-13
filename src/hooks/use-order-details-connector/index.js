@@ -1,0 +1,1 @@
+export { useOrderDetailsFetcher } from './use-order-details-connector'; 
