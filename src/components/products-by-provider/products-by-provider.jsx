@@ -98,6 +98,9 @@ const ProductsByProvider = (props) => {
     user: context.user,
   }));
 
+  // Obtener el ID del usuario del contexto usando su email
+  const userId = user?.email ? user.email.toLowerCase().replace('@', '~') : null;
+
   // Consultar el custom object del usuario
   const { 
     data: userData, 
@@ -106,9 +109,9 @@ const ProductsByProvider = (props) => {
   } = useQuery(FETCH_USER_BY_KEY, {
     variables: {
       container: "app-users",
-      key: user?.id,
+      key: userId,
     },
-    skip: !user?.id,
+    skip: !userId,
     context: {
       target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
     },
